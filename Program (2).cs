@@ -1,54 +1,92 @@
 ﻿using System;
 
-namespace _4._2
+namespace _4._3
 {
     class Program
     {
         static void Main(string[] args)
         {
-            int n = 11;
-            int[] sbyteAr = new int[n];
-            int[] shortAr = new int[n];
-            int[] intAr = new int[n];
-            Random rnd = new Random();
-            int sbyteCount = 0;
-            int shortCount = 0;
-            int intCount = 0;
-            int count = 0;
-            for(int i = 0; i < 2147483647; i++)
+            char[] array = {'@','_', '_', '_', '_', '_', '_', '_', '_', '_' };
+            Random medRnd = new Random();
+            Random bombRnd = new Random();
+            int med = medRnd.Next(1,9);
+            int bomb = bombRnd.Next(1,9);
+            char[] medAr = { '+' };
+            char[] bombAr = { '*' };
+            if (med == bomb)
             {
-                int rndNumber = rnd.Next(2147483647);
-                if (rndNumber < 128 && sbyteCount < (n - 1))
+                bomb = bombRnd.Next(1, 9);
+            }
+            System.Array.Copy(medAr, 0, array, med, medAr.Length);
+            System.Array.Copy(bombAr, 0, array, bomb, medAr.Length);
+            char temp;
+            Boolean flag = true;
+            int hp = 100;
+            Console.Write(array);
+            Console.WriteLine(" hp=" + hp);
+            for (int i = 0; i < 100; i++)
+            {
+                string button = Console.ReadLine();
+                if (button == "d")
                 {
-                    sbyteAr[sbyteCount] = rndNumber;
-                    Console.WriteLine("sbyteAr["+sbyteCount+"]: "+ rndNumber);
-                    sbyteCount++;
-                }
-                else
-                {
-                    if(rndNumber<32768 && shortCount < (n - 1))
+                    for(int j = 0; j < array.Length-1; j++)
                     {
-                        shortAr[shortCount] = rndNumber;
-                        Console.WriteLine("shortAr[" + shortCount + "]: " + rndNumber);
-                        shortCount++;
-                    }
-                    else
-                    {
-                        if (intCount < (n-1))
+                        if (array[j] == '@')
                         {
-                            intAr[intCount] = rndNumber;
-                            Console.WriteLine("intAr[" + intCount + "]: " + rndNumber);
-                            intCount++;
+                            if (array[j + 1] == '+')
+                            {
+                                array[j + 1] = '_';
+                                hp += 40;
+                            }
+                            if(array[j+1]=='*')
+                            {
+                                array[j + 1] = '_';
+                                hp -= 40;
+                            }
+                            temp = array[j];
+                            array[j] = array[j + 1];
+                            array[j + 1] = temp;
+                            if (j == array.Length-2)
+                            {
+                                Console.WriteLine("GAME OVER!");
+                                flag = false;
+                            }
+                            break;
                         }
                     }
+                    hp -= 5;
                 }
-                if(sbyteCount== (n - 1) && shortCount== (n - 1) && intCount == (n - 1))
+                if (button == "a")
+                {
+                    for (int j = 1; j < array.Length; j++)
+                    {
+                        if (array[j] == '@')
+                        {
+                            temp = array[j];
+                            array[j] = array[j - 1];
+                            array[j - 1] = temp;                            
+                            break;
+                        }
+                    }
+                    hp -= 5;
+                }
+                if (hp > 100)
+                {
+                    hp = 100;
+                }
+                if (hp <= 0)
+                {
+                    Console.WriteLine("GAME OVER!");
+                    flag = false;
+
+                }
+                if (flag == false)
                 {
                     break;
-                }                
-                count++;
+                }
+                Console.Write(array);
+                Console.WriteLine(" hp=" + hp);
             }
-            Console.WriteLine("Counter: " + count);
         }
     }
 }
